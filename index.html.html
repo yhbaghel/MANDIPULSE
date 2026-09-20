@@ -2572,7 +2572,7 @@ loadEstimated();
 
 </script>
 
-<!-- Text chat with the same ElevenLabs agent -->
+<!-- Text chat with ElevenLabs agent (Primary + Secondary + Tertiary Fallback) -->
 <button class="chat-fab" id="chatFab" type="button">💬 Chat with AI</button>
 
 <div class="chat-panel" id="chatPanel" role="dialog" aria-label="Chat with MandiPulse AI">
@@ -2598,7 +2598,12 @@ loadEstimated();
 <script type="module">
 import { Conversation } from "https://cdn.jsdelivr.net/npm/@elevenlabs/client@1.25.0/+esm";
 
-const AGENT_ID="agent_3001m2rbparrf6xtp1gc7kph7cg3";
+const AGENT_IDS = [
+  "agent_8501m2yyg2pgfcasf1phctsncav8", // 1st Agent
+  "agent_2701m2ywbesqezjse0m35gqf32zt", // 2nd Agent
+  "agent_3601m2yzdecdebardqbfda87mgtr"  // 3rd Agent
+];
+
 const $c=id=>document.getElementById(id);
 const panel=$c("chatPanel"),fab=$c("chatFab"),log=$c("chatLog"),input=$c("chatInput"),send=$c("chatSend"),status=$c("chatStatus");
 
@@ -2623,25 +2628,51 @@ function open(){
 }
 function close(){panel.classList.remove("open");fab.style.display="";}
 
+async function startAgentSession(agentId) {
+  if (window.MP_agent) window.MP_agent.sync();
+  return Conversation.startSession({
+    agentId: agentId,
+    connectionType: "websocket",
+    textOnly: true,
+    dynamicVariables: window.MP_vars || {},
+    clientTools: (window.MP_agent && window.MP_agent.tools) || {},
+    onConnect: () => { status.textContent = "Connected"; },
+    onDisconnect: () => { convo = null; status.textContent = "Disconnected — send a message to reconnect"; setTyping(false); },
+    onError: e => { console.error("Agent error (" + agentId + "):", e); setTyping(false); },
+    onMessage: m => {
+      if (m.role === "agent") { setTyping(false); add("agent", m.message); }
+    }
+  });
+}
+
 async function ensureSession(){
   if(convo)return convo;
   if(starting)return starting;
   status.textContent="Connecting…";
-  if(window.MP_agent)window.MP_agent.sync();
-  starting=Conversation.startSession({
-    agentId:AGENT_ID,
-    connectionType:"websocket",
-    textOnly:true,
-    dynamicVariables:window.MP_vars||{},
-    clientTools:(window.MP_agent&&window.MP_agent.tools)||{},
-    onConnect:()=>{status.textContent="Connected";},
-    onDisconnect:()=>{convo=null;status.textContent="Disconnected — send a message to reconnect";setTyping(false);},
-    onError:e=>{console.error(e);setTyping(false);add("sys","Connection problem. Check the agent settings (see notes).");},
-    onMessage:m=>{
-      if(m.role==="agent"){setTyping(false);add("agent",m.message);}
+  
+  starting = (async () => {
+    for (let i = 0; i < AGENT_IDS.length; i++) {
+      const agentId = AGENT_IDS[i];
+      try {
+        const session = await startAgentSession(agentId);
+        convo = session;
+        starting = null;
+        
+        // Dynamically update voice widget to match working agent ID
+        const widget = document.querySelector("elevenlabs-convai");
+        if (widget) widget.setAttribute("agent-id", agentId);
+        
+        return session;
+      } catch (err) {
+        console.warn(`Agent ${i + 1} (${agentId}) failed to connect:`, err);
+      }
     }
-  }).then(c=>{convo=c;starting=null;return c;})
-    .catch(e=>{starting=null;status.textContent="Could not connect";console.error(e);throw e;});
+    
+    starting = null;
+    status.textContent = "Could not connect";
+    throw new Error("All configured ElevenLabs agents failed to connect.");
+  })();
+  
   return starting;
 }
 
@@ -2659,7 +2690,7 @@ async function sendMsg(text){
     c.sendUserMessage(text);
   }catch(e){
     setTyping(false);
-    add("sys","Could not reach the agent. Make sure text-only overrides are enabled on the agent and this domain is allowlisted.");
+    add("sys","Could not reach any AI agents. Make sure text-only overrides are enabled on the agent and this domain is allowlisted.");
   }finally{send.disabled=false;input.focus();}
 }
 
@@ -2679,7 +2710,7 @@ $c("chatChips").querySelectorAll("button").forEach(b=>b.addEventListener("click"
 </script>
 
 <!-- ElevenLabs voice agent -->
-<elevenlabs-convai agent-id="agent_3001m2rbparrf6xtp1gc7kph7cg3"></elevenlabs-convai>
+<elevenlabs-convai agent-id="agent_8501m2yyg2pgfcasf1phctsncav8"></elevenlabs-convai>
 <script
   src="https://unpkg.com/@elevenlabs/convai-widget-embed"
   async
