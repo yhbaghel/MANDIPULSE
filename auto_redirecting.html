@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="3;url=https://mandipulse1.netlify.app">
+    <title>Redirecting to MandiPulse</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        @keyframes spin-smooth {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .pulse-animation {
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+        .spinner {
+            animation: spin-smooth 1.2s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4 font-sans">
+
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-8 text-center relative overflow-hidden">
+        <!-- Glow accent background -->
+        <div class="absolute -top-10 -left-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl"></div>
+        <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl"></div>
+
+        <!-- Animated Progress / Loading Visual -->
+        <div class="relative w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+            <div class="absolute inset-0 rounded-full bg-emerald-500/20 pulse-animation"></div>
+            <!-- Outer spinning ring -->
+            <svg class="w-full h-full spinner text-emerald-500" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="6" fill="none" stroke-dasharray="200" stroke-dashoffset="60" stroke-linecap="round"></circle>
+            </svg>
+            <!-- Center Icon or Countdown -->
+            <span id="countdown" class="absolute text-2xl font-bold text-emerald-400">3</span>
+        </div>
+
+        <!-- Headline & Info -->
+        <h1 class="text-2xl font-bold text-white mb-2 tracking-tight">Redirecting You</h1>
+        <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+            You are being automatically redirected to <br>
+            <span class="text-emerald-400 font-semibold underline decoration-emerald-500/30">mandipulse1.netlify.app</span>
+        </p>
+
+        <!-- Action / Manual Button -->
+        <a id="redirect-btn" href="https://mandipulse1.netlify.app" class="inline-flex items-center justify-center w-full px-5 py-3 text-sm font-semibold text-slate-950 bg-emerald-400 hover:bg-emerald-300 transition-all rounded-xl shadow-lg shadow-emerald-500/20 group">
+            <span>Click here if not redirected</span>
+            <svg class="w-4 h-4 ml-2 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+        </a>
+
+        <!-- Footer status message -->
+        <p class="mt-6 text-xs text-slate-500">
+            Secure destination connection
+        </p>
+    </div>
+
+    <script>
+        // Target destination URL
+        const TARGET_URL = "https://mandipulse1.netlify.app";
+        let secondsLeft = 3;
+
+        const countdownElement = document.getElementById("countdown");
+
+        // Countdown timer function
+        const timer = setInterval(() => {
+            secondsLeft--;
+            if (countdownElement) {
+                countdownElement.textContent = secondsLeft > 0 ? secondsLeft : "0";
+            }
+
+            if (secondsLeft <= 0) {
+                clearInterval(timer);
+                window.location.href = TARGET_URL;
+            }
+        }, 1000);
+
+        // Immediate backup trigger using JS window location
+        setTimeout(() => {
+            window.location.replace(TARGET_URL);
+        }, 3000);
+    </script>
+</body>
+</html>
