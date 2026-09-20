@@ -1,0 +1,2831 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="MandiPulse — premium Indian mandi intelligence dashboard powered by data.gov.in">
+<title>MandiPulse — AI Mandi Intelligence</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* Base Structure */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+ margin:0;
+ min-height:100vh;
+ font-family:"DM Sans", Arial, sans-serif;
+ font-size: 15px;
+ line-height: 1.5;
+ transition: background 0.3s ease, color 0.3s ease;
+}
+
+button,input,select{font:inherit}
+button{cursor:pointer}
+
+.app{max-width:1280px;margin:auto;padding:22px 18px 50px}
+
+.topbar{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:14px;
+ margin-bottom:24px;
+ padding:14px;
+ border-radius:18px;
+ transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.brand{display:flex;align-items:center;gap:12px}
+
+.logo{
+ width:44px;height:44px;border-radius:14px;
+ display:grid;place-items:center;
+ color:#000000;font-weight:900;font-size:22px;
+ flex-shrink:0;
+}
+
+.brand h1{
+ font:700 23px "Space Grotesk", sans-serif;
+ margin:0;
+ letter-spacing:-.5px
+}
+
+.brand p{
+ margin:2px 0 0;
+ font-size:12px
+}
+
+.live{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ padding:9px 12px;
+ border-radius:999px;
+ font-size:12px;
+ font-weight:600;
+}
+
+.dot{
+ width:8px;height:8px;border-radius:50%;
+}
+
+.hero{
+ position:relative;
+ overflow:hidden;
+ border-radius:28px;
+ padding:34px;
+ margin-bottom:18px;
+ transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.eyebrow{
+ display:inline-flex;
+ gap:8px;
+ align-items:center;
+ font-size:12px;
+ font-weight:700;
+ letter-spacing:1.4px;
+ text-transform:uppercase
+}
+
+.hero h2{
+ font:700 clamp(30px,4.5vw,56px)/1.05 "Space Grotesk", sans-serif;
+ letter-spacing:-1.8px;
+ max-width:820px;
+ margin:13px 0 14px
+}
+
+.hero p{
+ max-width:720px;
+ font-size:16px;
+ line-height:1.65;
+ margin:0
+}
+
+.hero-actions{
+ display:flex;
+ gap:10px;
+ flex-wrap:wrap;
+ margin-top:24px
+}
+
+.btn{
+ padding:12px 18px;
+ border-radius:12px;
+ font-weight:700;
+ transition:.2s transform,.2s border,.2s box-shadow,.2s background;
+ border:1px solid transparent;
+}
+
+.btn:hover{
+ transform:translateY(-2px);
+}
+
+.kpis{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:12px;
+ margin:18px 0
+}
+
+.kpi{
+ border-radius:18px;
+ padding:18px;
+ min-height:112px;
+ position:relative;
+ overflow:hidden;
+ transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.kpi small{
+ display:block;
+ font-size:12px;
+ font-weight: 600;
+ margin-bottom:9px
+}
+
+.kpi strong{
+ font:700 27px "Space Grotesk", sans-serif;
+ display:block;
+}
+
+.tabs{
+ position:relative;
+ z-index:10;
+ display:flex;
+ gap:7px;
+ overflow:auto;
+ padding:6px;
+ border-radius:16px;
+ margin:18px 0
+}
+
+.tab{
+ position:relative;
+ touch-action:manipulation;
+ pointer-events:auto;
+ border:0;
+ background:transparent;
+ padding:12px 18px;
+ border-radius:11px;
+ font-weight:700;
+ white-space:nowrap;
+ cursor:pointer;
+}
+
+.tab b{
+ margin-right:6px
+}
+
+.panel{display:none}
+.panel.active{display:block}
+
+.layout{
+ display:grid;
+ grid-template-columns:1.1fr .9fr;
+ gap:14px
+}
+
+.card{
+ border-radius:20px;
+ padding:24px;
+ transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.card h3{
+ font:700 22px "Space Grotesk", sans-serif;
+ margin:0 0 6px
+}
+
+.card .desc{
+ font-size:13px;
+ margin:0 0 20px
+}
+
+.formgrid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:14px
+}
+
+.field{
+ display:flex;
+ flex-direction:column;
+ gap:8px
+}
+
+.field.full{grid-column:1/-1}
+
+.field label{
+ font-size:12px;
+ font-weight:700;
+ letter-spacing:0.5px;
+}
+
+.field select,
+.field input{
+ width:100%;
+ border-radius:12px;
+ padding:13px 14px;
+ outline:0;
+ font-size:15px;
+ font-weight: 500;
+ border:1px solid;
+ transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.actions{
+ display:flex;
+ gap:10px;
+ flex-wrap:wrap;
+ margin-top:18px
+}
+
+.pricehero{
+ margin-top:18px;
+ padding:22px;
+ border-radius:18px;
+ border:1px solid;
+ position:relative;
+ overflow:hidden
+}
+
+.pricehero .top{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ align-items:flex-start
+}
+
+.pricehero h4{
+ margin:0;
+ font:700 22px "Space Grotesk", sans-serif;
+}
+
+.source{
+ font-size:11px;
+ font-weight: 700;
+ padding:5px 10px;
+ border-radius:999px;
+ border:1px solid;
+}
+
+.bigprice{
+ font:700 46px "Space Grotesk", sans-serif;
+ letter-spacing:-1.5px;
+ margin:12px 0 4px
+}
+
+.pricehero .sub{
+ font-size:13px;
+ line-height: 1.5;
+}
+
+.range{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+ margin-top:18px
+}
+
+.mini{
+ border-radius:12px;
+ border:1px solid;
+ padding:12px 14px;
+}
+
+.mini small{
+ display:block;
+ font-size:11px;
+ font-weight: 700;
+}
+
+.mini strong{
+ font:700 20px "Space Grotesk", sans-serif;
+ display:block;
+ margin-top:4px
+}
+
+.chartbox{
+ height:320px;
+ position:relative
+}
+
+.table-wrap{
+ overflow:auto;
+ border-radius:16px;
+ margin-top:18px;
+ border:1px solid;
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+ min-width:650px
+}
+
+th,td{
+ padding:14px 16px;
+ text-align:left;
+ font-size:13px;
+ border-bottom:1px solid;
+}
+
+th{
+ font-size:11px;
+ font-weight: 700;
+ text-transform:uppercase;
+ letter-spacing:.8px
+}
+
+td.num{
+ text-align:right;
+ font-variant-numeric:tabular-nums;
+ font-weight: 600;
+}
+
+.rank{
+ font-weight:800
+}
+
+.badge2{
+ font-size:11px;
+ font-weight: 700;
+ border:1px solid;
+ border-radius:999px;
+ padding:4px 9px
+}
+
+.insight{
+ margin-top:16px;
+ border-left:4px solid;
+ padding:14px 16px;
+ border-radius:0 12px 12px 0;
+ font-size:13px;
+ line-height: 1.6;
+}
+
+.status{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ margin-top:14px;
+ font-size:13px;
+ font-weight: 600;
+}
+
+.spinner{
+ width:14px;
+ height:14px;
+ border:2px solid;
+ border-top-color:transparent !important;
+ border-radius:50%;
+ animation:spin .8s linear infinite
+}
+
+@keyframes spin{
+ to{transform:rotate(360deg)}
+}
+
+footer{
+ margin-top:35px;
+ padding:22px 4px;
+ border-top:1px solid;
+ font-size:12px;
+ line-height:1.75
+}
+
+.toast{
+ position:fixed;
+ right:18px;
+ top:18px;
+ padding:14px 18px;
+ border-radius:12px;
+ font-weight: 600;
+ opacity:0;
+ transform:translateY(-8px);
+ transition:.25s;
+ pointer-events:none;
+ z-index:100;
+ border: 1px solid;
+}
+
+.toast.show{
+ opacity:1;
+ transform:none
+}
+
+.modal{
+ position:fixed;
+ inset:0;
+ backdrop-filter:blur(10px);
+ display:none;
+ place-items:center;
+ padding:18px;
+ z-index:200
+}
+
+.modal.open{display:grid}
+
+.modalbox{
+ max-width:520px;
+ width:100%;
+ border-radius:22px;
+ padding:26px;
+ border: 1px solid;
+}
+
+.modalbox h3{
+ font:700 24px "Space Grotesk", sans-serif;
+ margin:0 0 8px
+}
+
+.modalbox p{
+ font-size:13px;
+ line-height:1.6
+}
+
+.modalbox input{
+ margin:10px 0 16px
+}
+
+.theme-selector select {
+ padding: 8px 12px;
+ border-radius: 10px;
+ font-size: 12px;
+ font-weight: 700;
+ cursor: pointer;
+ border: 1px solid;
+ outline: none;
+}
+
+@media(max-width:900px){
+ .layout{grid-template-columns:1fr}
+ .kpis{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:600px){
+ .app{padding:13px 11px 35px}
+ .hero{padding:25px 20px;border-radius:22px}
+ .kpis{grid-template-columns:1fr 1fr}
+ .formgrid{grid-template-columns:1fr}
+ .field.full{grid-column:auto}
+ .range{grid-template-columns:1fr}
+ .topbar{align-items:flex-start}
+ .brand h1{font-size:20px}
+}
+
+/* ===== Text chat panel ===== */
+.chat-fab{position:fixed;left:18px;bottom:18px;z-index:90;display:flex;align-items:center;gap:8px;
+  padding:13px 18px;border-radius:999px;border:1px solid var(--border-bright,#333);
+  background:var(--accent,#00ff66);color:var(--bg,#000);font-weight:800;box-shadow:0 8px 26px rgba(0,0,0,.35)}
+.chat-fab:hover{transform:translateY(-2px)}
+.chat-panel{position:fixed;left:18px;bottom:18px;z-index:95;width:min(380px,calc(100vw - 36px));height:min(560px,calc(100vh - 36px));
+  display:none;flex-direction:column;border-radius:20px;overflow:hidden;
+  background:var(--panel,#0a0a0a);color:var(--text,#fff);border:1px solid var(--border-bright,#333);box-shadow:0 18px 50px rgba(0,0,0,.45)}
+.chat-panel.open{display:flex}
+.chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;
+  border-bottom:1px solid var(--border,#222);background:var(--panel2,#121212)}
+.chat-head b{font:700 16px "Space Grotesk",sans-serif}
+.chat-head small{display:block;color:var(--muted,#a0a0a0);font-size:11px;margin-top:2px}
+.chat-x{background:transparent;border:0;color:var(--muted,#a0a0a0);font-size:20px;line-height:1;padding:4px 8px}
+.chat-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:86%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+.msg.agent{align-self:flex-start;background:var(--panel2,#121212);border:1px solid var(--border,#222)}
+.msg.user{align-self:flex-end;background:var(--accent,#00ff66);color:var(--bg,#000);font-weight:600}
+.msg.sys{align-self:center;color:var(--muted,#a0a0a0);font-size:12px;text-align:center}
+.chat-chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px}
+.chat-chips button{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--border-bright,#333);
+  background:transparent;color:var(--text,#fff)}
+.chat-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border,#222)}
+.chat-form input{flex:1;min-width:0;padding:11px 13px;border-radius:12px;border:1px solid var(--border-bright,#333);
+  background:var(--panel2,#121212);color:var(--text,#fff);outline:0;font-size:14px}
+.chat-form button{padding:0 16px;border-radius:12px;border:0;background:var(--accent,#00ff66);color:var(--bg,#000);font-weight:800}
+.chat-form button:disabled{opacity:.5}
+@media(max-width:600px){.chat-panel{left:8px;bottom:8px;width:calc(100vw - 16px);height:calc(100vh - 16px)}}
+</style>
+
+<!-- Theme Variables CSS -->
+<style id="theme-styles">
+/* 1. BLACK OLED THEME (NEW) */
+body.theme-black {
+  --bg: #000000;
+  --panel: #0a0a0a;
+  --panel2: #121212;
+  --border: #222222;
+  --border-bright: #333333;
+  --text: #ffffff;
+  --muted: #a0a0a0;
+  --accent: #00ff66;
+  --accent-glow: rgba(0, 255, 102, 0.15);
+  --cyan: #00e5ff;
+  --amber: #ffb700;
+  --red: #ff3355;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+body.theme-black .topbar { background: #080808; border: 1px solid var(--border); }
+body.theme-black .logo { background: var(--accent); color: #000; }
+body.theme-black .brand h1 { color: #ffffff; }
+body.theme-black .brand p { color: var(--muted); }
+body.theme-black .live { background: #121212; border: 1px solid var(--border); color: #e0e0e0; }
+body.theme-black .dot { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+body.theme-black .hero { background: linear-gradient(135deg, #0d0d0d, #000000); border: 1px solid var(--border-bright); }
+body.theme-black .eyebrow { color: var(--accent); }
+body.theme-black .hero h2 { color: #ffffff; }
+body.theme-black .hero h2 span { color: var(--accent); }
+body.theme-black .hero p { color: #cccccc; }
+body.theme-black .btn { background: #141414; color: #ffffff; border-color: var(--border-bright); }
+body.theme-black .btn:hover { background: #222222; border-color: #555555; }
+body.theme-black .btn.primary { background: var(--accent); color: #000000; border: none; font-weight: 800; }
+body.theme-black .kpi { background: #0a0a0a; border: 1px solid var(--border); }
+body.theme-black .kpi small { color: var(--muted); }
+body.theme-black .kpi strong { color: #ffffff; }
+body.theme-black .tabs { background: #080808; border: 1px solid var(--border); }
+body.theme-black .tab { color: var(--muted); }
+body.theme-black .tab.active { background: #1a1a1a; color: #ffffff; border: 1px solid var(--border-bright); }
+body.theme-black .tab b { color: var(--accent); }
+body.theme-black .card { background: #0a0a0a; border: 1px solid var(--border); }
+body.theme-black .card h3 { color: #ffffff; }
+body.theme-black .card .desc { color: var(--muted); }
+body.theme-black .field label { color: #dddddd; }
+body.theme-black .field select, body.theme-black .field input { background: #121212 !important; border-color: #2a2a2a !important; color: #ffffff !important; }
+body.theme-black .field select option { background: #121212; color: #ffffff; }
+body.theme-black .pricehero { background: #0d0d0d; border-color: var(--border-bright); }
+body.theme-black .pricehero h4 { color: #ffffff; }
+body.theme-black .source { border-color: var(--accent); color: var(--accent); background: rgba(0, 255, 102, 0.05); }
+body.theme-black .bigprice { color: #ffffff; }
+body.theme-black .pricehero .sub { color: var(--muted); }
+body.theme-black .mini { background: #121212; border-color: var(--border); }
+body.theme-black .mini small { color: var(--muted); }
+body.theme-black .mini strong { color: #ffffff; }
+body.theme-black .mini.low strong { color: var(--red); }
+body.theme-black .mini.high strong { color: var(--accent); }
+body.theme-black .table-wrap { border-color: var(--border); background: #0a0a0a; }
+body.theme-black table th { background: #121212 !important; color: #aaaaaa !important; border-bottom-color: var(--border) !important; }
+body.theme-black table td { border-bottom-color: #181818 !important; color: #eeeeee; }
+body.theme-black table tr.best td { background: rgba(0, 255, 102, 0.06); }
+body.theme-black .rank { color: var(--accent); }
+body.theme-black .badge2 { border-color: var(--accent); color: var(--accent); background: rgba(0, 255, 102, 0.05); }
+body.theme-black .insight { border-left-color: var(--cyan); background: #0e1418; color: #dddddd; }
+body.theme-black .insight b { color: #ffffff; }
+body.theme-black .status { color: var(--muted); }
+body.theme-black .spinner { border-color: #444; border-top-color: var(--accent) !important; }
+body.theme-black footer { border-top-color: var(--border); color: #888888; }
+body.theme-black .toast { background: #141414; color: #ffffff; border-color: var(--accent); }
+body.theme-black .modal { background: rgba(0,0,0,0.85); }
+body.theme-black .modalbox { background: #0a0a0a; border-color: var(--border-bright); }
+body.theme-black .modalbox h3 { color: #ffffff; }
+body.theme-black .modalbox p { color: var(--muted); }
+body.theme-black .theme-selector select { background: #121212; color: #ffffff; border-color: var(--border-bright); }
+
+/* 2. EMERALD DARK THEME */
+body.theme-emerald {
+  --bg: #06130e;
+  --panel: #0b2118;
+  --panel2: #102c20;
+  --border: rgba(151,196,166,.18);
+  --border-bright: rgba(53,208,127,.35);
+  --text: #f4f7f1;
+  --muted: #9fb3a5;
+  --accent: #35d07f;
+  --cyan: #55d7c1;
+  --amber: #f1bd5a;
+  --red: #ff6f76;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+body.theme-emerald .topbar { background: rgba(8,25,17,.88); border: 1px solid var(--border); }
+body.theme-emerald .logo { background: linear-gradient(145deg,#43df8b,#168c59); color: #000000; }
+body.theme-emerald .brand h1 { color: #ffffff; }
+body.theme-emerald .brand p { color: var(--muted); }
+body.theme-emerald .live { background: #0a1e16; border: 1px solid var(--border); color: #d0e6d8; }
+body.theme-emerald .dot { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+body.theme-emerald .hero { background: linear-gradient(135deg,#123b29 0%,#0a2419 55%,#091a13 100%); border: 1px solid var(--border-bright); }
+body.theme-emerald .eyebrow { color: var(--amber); }
+body.theme-emerald .hero h2 { color: #ffffff; }
+body.theme-emerald .hero h2 span { color: var(--accent); }
+body.theme-emerald .hero p { color: #c0d4c6; }
+body.theme-emerald .btn { background: linear-gradient(180deg,#163627,#102a20); color: #ffffff; border-color: var(--border); }
+body.theme-emerald .btn:hover { border-color: var(--accent); }
+body.theme-emerald .btn.primary { background: var(--accent); color: #04100a; border: none; font-weight: 800; }
+body.theme-emerald .kpi { background: var(--panel); border: 1px solid var(--border); }
+body.theme-emerald .kpi small { color: var(--muted); }
+body.theme-emerald .kpi strong { color: #ffffff; }
+body.theme-emerald .tabs { background: #081912; border: 1px solid var(--border); }
+body.theme-emerald .tab { color: var(--muted); }
+body.theme-emerald .tab.active { background: #133325; color: #ffffff; border: 1px solid var(--border-bright); }
+body.theme-emerald .tab b { color: var(--accent); }
+body.theme-emerald .card { background: var(--panel); border: 1px solid var(--border); }
+body.theme-emerald .card h3 { color: #ffffff; }
+body.theme-emerald .card .desc { color: var(--muted); }
+body.theme-emerald .field label { color: #c5d8cb; }
+body.theme-emerald .field select, body.theme-emerald .field input { background: #061710 !important; border-color: rgba(180,220,193,.25) !important; color: #ffffff !important; }
+body.theme-emerald .field select option { background: #0b2118; color: #ffffff; }
+body.theme-emerald .pricehero { background: #0e291e; border-color: var(--border-bright); }
+body.theme-emerald .pricehero h4 { color: #ffffff; }
+body.theme-emerald .source { border-color: var(--accent); color: var(--accent); background: rgba(53,208,127,0.1); }
+body.theme-emerald .bigprice { color: #ffffff; }
+body.theme-emerald .pricehero .sub { color: var(--muted); }
+body.theme-emerald .mini { background: #081a13; border-color: var(--border); }
+body.theme-emerald .mini small { color: var(--muted); }
+body.theme-emerald .mini strong { color: #ffffff; }
+body.theme-emerald .mini.low strong { color: var(--red); }
+body.theme-emerald .mini.high strong { color: var(--accent); }
+body.theme-emerald .table-wrap { border-color: var(--border); background: var(--panel); }
+body.theme-emerald table th { background: #071b13 !important; color: #b7cbbd !important; border-bottom-color: var(--border) !important; }
+body.theme-emerald table td { border-bottom-color: rgba(180,220,193,.1) !important; color: #e5eee8; }
+body.theme-emerald table tr.best td { background: rgba(53,208,127,.08); }
+body.theme-emerald .rank { color: var(--accent); }
+body.theme-emerald .badge2 { border-color: var(--accent); color: var(--accent); background: rgba(53,208,127,0.1); }
+body.theme-emerald .insight { border-left-color: var(--cyan); background: #092026; color: #d0e6df; }
+body.theme-emerald .insight b { color: #ffffff; }
+body.theme-emerald .status { color: var(--muted); }
+body.theme-emerald .spinner { border-color: #244b38; border-top-color: var(--accent) !important; }
+body.theme-emerald footer { border-top-color: var(--border); color: #81988a; }
+body.theme-emerald .toast { background: #0d291d; color: #ffffff; border-color: var(--accent); }
+body.theme-emerald .modal { background: rgba(2,10,7,0.8); }
+body.theme-emerald .modalbox { background: #0b2118; border-color: var(--border-bright); }
+body.theme-emerald .modalbox h3 { color: #ffffff; }
+body.theme-emerald .modalbox p { color: var(--muted); }
+body.theme-emerald .theme-selector select { background: #0b2118; color: #ffffff; border-color: var(--border-bright); }
+
+/* 3. WARM IVORY LIGHT THEME */
+body.theme-warm {
+  --bg: #F7F3E8;
+  --panel: #FBF8EF;
+  --panel2: #EEE9DC;
+  --border: #D9D2C3;
+  --border-bright: #176B45;
+  --text: #253126;
+  --muted: #687064;
+  --accent: #176B45;
+  --cyan: #0E4E32;
+  --amber: #C49A3A;
+  --red: #d93838;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+body.theme-warm .topbar { background: #FBF8EF; border: 1px solid var(--border); }
+body.theme-warm .logo { background: var(--accent); color: #ffffff; }
+body.theme-warm .brand h1 { color: #253126; }
+body.theme-warm .brand p { color: var(--muted); }
+body.theme-warm .live { background: #EEE9DC; border: 1px solid var(--border); color: #253126; }
+body.theme-warm .dot { background: var(--accent); }
+body.theme-warm .hero { background: #FBF8EF; border: 1px solid var(--border); }
+body.theme-warm .eyebrow { color: var(--amber); }
+body.theme-warm .hero h2 { color: #253126; }
+body.theme-warm .hero h2 span { color: var(--accent); }
+body.theme-warm .hero p { color: #4a544b; }
+body.theme-warm .btn { background: #EEE9DC; color: #253126; border-color: var(--border); }
+body.theme-warm .btn:hover { background: #e2dbcc; }
+body.theme-warm .btn.primary { background: var(--accent); color: #ffffff; border: none; }
+body.theme-warm .kpi { background: #FBF8EF; border: 1px solid var(--border); }
+body.theme-warm .kpi small { color: var(--muted); }
+body.theme-warm .kpi strong { color: #253126; }
+body.theme-warm .tabs { background: #EEE9DC; border: 1px solid var(--border); }
+body.theme-warm .tab { color: var(--muted); }
+body.theme-warm .tab.active { background: #FBF8EF; color: #253126; border: 1px solid var(--border); }
+body.theme-warm .tab b { color: var(--accent); }
+body.theme-warm .card { background: #FBF8EF; border: 1px solid var(--border); }
+body.theme-warm .card h3 { color: #253126; }
+body.theme-warm .card .desc { color: var(--muted); }
+body.theme-warm .field label { color: #384239; }
+body.theme-warm .field select, body.theme-warm .field input { background: #ffffff !important; border-color: var(--border) !important; color: #253126 !important; }
+body.theme-warm .field select option { background: #ffffff; color: #253126; }
+body.theme-warm .pricehero { background: #f2ede2; border-color: var(--border); }
+body.theme-warm .pricehero h4 { color: #253126; }
+body.theme-warm .source { border-color: var(--accent); color: var(--accent); background: rgba(23,107,69,0.08); }
+body.theme-warm .bigprice { color: #253126; }
+body.theme-warm .pricehero .sub { color: var(--muted); }
+body.theme-warm .mini { background: #ffffff; border-color: var(--border); }
+body.theme-warm .mini small { color: var(--muted); }
+body.theme-warm .mini strong { color: #253126; }
+body.theme-warm .mini.low strong { color: var(--red); }
+body.theme-warm .mini.high strong { color: var(--accent); }
+body.theme-warm .table-wrap { border-color: var(--border); background: #FBF8EF; }
+body.theme-warm table th { background: #EEE9DC !important; color: #4a544b !important; border-bottom-color: var(--border) !important; }
+body.theme-warm table td { border-bottom-color: var(--border) !important; color: #253126; }
+body.theme-warm table tr.best td { background: rgba(23,107,69,0.08); }
+body.theme-warm .rank { color: var(--accent); }
+body.theme-warm .badge2 { border-color: var(--accent); color: var(--accent); background: rgba(23,107,69,0.08); }
+body.theme-warm .insight { border-left-color: var(--accent); background: #f0ebe0; color: #384239; }
+body.theme-warm .insight b { color: #253126; }
+body.theme-warm .status { color: var(--muted); }
+body.theme-warm .spinner { border-color: #ccc; border-top-color: var(--accent) !important; }
+body.theme-warm footer { border-top-color: var(--border); color: #687064; }
+body.theme-warm .toast { background: #253126; color: #ffffff; border-color: var(--accent); }
+body.theme-warm .modal { background: rgba(37,49,38,0.5); }
+body.theme-warm .modalbox { background: #FBF8EF; border-color: var(--border); }
+body.theme-warm .modalbox h3 { color: #253126; }
+body.theme-warm .modalbox p { color: var(--muted); }
+body.theme-warm .theme-selector select { background: #ffffff; color: #253126; border-color: var(--border); }
+
+/* Common Utilities */
+.up { color: var(--accent) !important; }
+.cyan-t { color: var(--cyan) !important; }
+.amber-t { color: var(--amber) !important; }
+</style>
+
+</head>
+
+<body class="theme-black">
+
+<div class="app">
+
+<div class="topbar">
+ <div class="brand">
+  <div class="logo">₹</div>
+  <div>
+   <h1>MandiPulse</h1>
+   <p>AI-powered mandi intelligence for smarter selling</p>
+  </div>
+ </div>
+
+ <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+  <div class="theme-selector">
+    <select id="themeSelect" onchange="applyTheme(this.value)">
+      <option value="theme-black">Pure Black Theme</option>
+      <option value="theme-emerald">Emerald Theme</option>
+      <option value="theme-warm">Warm Ivory Theme</option>
+    </select>
+  </div>
+
+  <button class="btn" style="padding:9px 12px;font-size:12px" onclick="openKey()">⚙ API Key</button>
+
+  <div class="live">
+   <span class="dot"></span>
+   <span id="connectionText">ESTIMATED DATA</span>
+  </div>
+ </div>
+</div>
+
+<section class="hero">
+
+ <div class="eyebrow">● AGRI INTELLIGENCE · 01</div>
+
+ <h2>
+  Know the price.<br>
+  <span>Sell at the right place.</span>
+ </h2>
+
+ <p>
+ Government mandi prices, market comparison, trend intelligence
+ and profit planning — packed into one high-tech farmer dashboard.
+ </p>
+
+ <div class="hero-actions">
+  <button class="btn primary" onclick="goTo('lookup')">
+   Check mandi price →
+  </button>
+
+  <button class="btn" onclick="openKey()">
+   Attach / Test API
+  </button>
+
+  <button class="btn" onclick="loadEstimated()">
+   Use estimated data
+  </button>
+ </div>
+
+</section>
+
+<div class="kpis">
+
+ <div class="kpi">
+  <small>Current modal price</small>
+  <strong id="kpiPrice">₹—</strong>
+  <div class="up" id="kpiTrend">Waiting for market</div>
+ </div>
+
+ <div class="kpi">
+  <small>Best market signal</small>
+  <strong id="kpiMarket">—</strong>
+  <div class="cyan-t">highest modal</div>
+ </div>
+
+ <div class="kpi">
+  <small>Markets scanned</small>
+  <strong id="kpiMarkets">0</strong>
+  <div class="amber-t">government records</div>
+ </div>
+
+ <div class="kpi">
+  <small>Data freshness</small>
+  <strong id="kpiDate">—</strong>
+  <div class="up">arrival date</div>
+ </div>
+
+</div>
+
+<div class="tabs">
+
+ <button class="tab active" data-panel="lookup">
+  <b>01</b>Live price
+ </button>
+
+ <button class="tab" data-panel="compare">
+  <b>02</b>All States
+ </button>
+
+ <button class="tab" data-panel="profit">
+  <b>03</b>Transportation
+ </button>
+
+</div>
+
+<section class="panel active" id="lookup">
+
+ <div class="layout">
+
+  <div class="card">
+
+   <h3>Find today's mandi signal</h3>
+
+   <p class="desc">
+    Search mandi price data by crop and location.
+   </p>
+
+   <div class="formgrid">
+
+    <div class="field">
+     <label>COMMODITY</label>
+     <select id="crop"></select>
+    </div>
+
+    <div class="field">
+     <label>STATE</label>
+     <select id="state"></select>
+    </div>
+
+    <div class="field">
+     <label>DISTRICT</label>
+     <select id="district"></select>
+    </div>
+
+    <div class="field full">
+     <label>
+      MARKET / MANDI
+      <span style="opacity:0.7">
+       (APMC = Agricultural Produce Market Committee · optional)
+      </span>
+     </label>
+
+     <input
+      id="market"
+      placeholder="e.g. Pune, Nashik, Azadpur..."
+     >
+    </div>
+
+   </div>
+
+   <div class="actions">
+    <button class="btn primary" onclick="searchPrice()">
+     Search government data
+    </button>
+
+    <button class="btn" onclick="fillPopular()">
+     Popular example
+    </button>
+   </div>
+
+   <div id="lookupStatus"></div>
+   <div id="priceResult"></div>
+
+  </div>
+
+ </div>
+
+</section>
+
+<section class="panel" id="compare">
+
+ <div class="card">
+
+  <h3>Market radar</h3>
+
+  <p class="desc">
+   Compare multiple mandi records and surface the strongest
+   modal-price signal.
+  </p>
+
+  <div class="formgrid">
+
+   <div class="field full">
+    <label>COMMODITY</label>
+    <select id="compareCrop"></select>
+   </div>
+
+  </div>
+
+  <div class="actions">
+   <button class="btn primary" onclick="compareMarkets()">
+    Scan markets
+   </button>
+  </div>
+
+  <div id="compareResult">
+   <div class="insight">
+    <b>All States ready.</b>
+    Select a crop and tap “Scan markets”.
+   </div>
+  </div>
+
+  <div id="compareStatus" class="status"></div>
+
+ </div>
+
+</section>
+
+<section class="panel" id="profit">
+
+ <div class="layout">
+
+  <div class="card">
+
+   <h3>Transportation & profit</h3>
+
+   <p class="desc">
+    Selling-state price × quantity minus truck transport cost.
+   </p>
+
+   <div class="formgrid">
+
+    <div class="field">
+     <label>HOME STATE</label>
+     <select id="homeState"></select>
+    </div>
+
+    <div class="field">
+     <label>SELLING STATE</label>
+     <select id="destState"></select>
+    </div>
+
+    <div class="field">
+     <label>COMMODITY</label>
+     <select id="profitCrop"></select>
+    </div>
+
+    <div class="field">
+     <label>QUANTITY (QUINTALS)</label>
+     <input id="qty" type="number" value="20" min="1">
+    </div>
+
+    <div class="field">
+     <label>FREIGHT ₹ / KM / QUINTAL</label>
+     <input id="rate" type="number" value="100" min=".1" step=".1">
+    </div>
+
+   </div>
+
+   <div class="actions">
+    <button class="btn primary" onclick="calculateProfit()">
+     Calculate opportunity
+    </button>
+   </div>
+
+   <div id="profitResult">
+    <div class="insight">
+     <b>Transportation ready.</b>
+     Choose HOME STATE and SELLING STATE, then calculate.
+    </div>
+   </div>
+
+  </div>
+
+  <div class="card">
+
+   <h3>Opportunity meter</h3>
+
+   <p class="desc">
+    Selling value vs transport-adjusted amount.
+   </p>
+
+   <div class="chartbox">
+    <canvas id="profitChart"></canvas>
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
+
+<footer>
+
+ <b>Data layer:</b>
+ Live mode reads the Government of India OGD mandi dataset
+ used by AGMARKNET. Prices are shown with their arrival date.
+ If live fetching fails, the app explicitly switches to estimated
+ data instead of presenting estimates as live.
+
+ <br><br>
+
+ <b>API:</b>
+ Use “⚙ API Key” to attach your data.gov.in key.
+ The app validates the endpoint and returned mandi-price fields
+ before marking the connection live.
+
+</footer>
+
+</div>
+
+<div class="modal" id="keyModal">
+
+ <div class="modalbox">
+
+  <h3>Government API</h3>
+
+  <p>
+   Paste your <b>data.gov.in API key</b>.
+   It is stored only in this browser.
+   After saving, the app tests the endpoint and checks
+   the returned mandi-price fields.
+  </p>
+
+  <input
+   id="apiKeyInput"
+   type="password"
+   placeholder="Paste data.gov.in API key"
+   autocomplete="off"
+  >
+
+  <div class="actions">
+
+   <button class="btn primary" onclick="saveKeyAndTest()">
+    Save & Test API
+   </button>
+
+   <button class="btn" onclick="testAPI()">
+    Test Current Key
+   </button>
+
+   <button class="btn" onclick="closeKey()">
+    Close
+   </button>
+
+  </div>
+
+  <div id="apiTestResult" class="status"></div>
+
+ </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+function applyTheme(themeName) {
+  document.body.className = themeName;
+  localStorage.setItem('mandipulse_theme', themeName);
+  const sel = document.getElementById('themeSelect');
+  if (sel) sel.value = themeName;
+}
+
+// Load saved theme if present
+const savedTheme = localStorage.getItem('mandipulse_theme') || 'theme-black';
+applyTheme(savedTheme);
+
+const RESOURCE_ID="9ef84268-d588-465a-a308-a864a43d0070";
+
+const API_BASE=
+ "https://api.data.gov.in/resource/"+RESOURCE_ID;
+
+const CROPS=[
+ "Wheat","Rice","Onion","Tomato",
+ "Potato","Cotton","Soybean","Maize"
+];
+
+const STATES=[
+ "Andhra Pradesh","Assam","Bihar","Chhattisgarh",
+ "Gujarat","Haryana","Himachal Pradesh","Jharkhand",
+ "Karnataka","Kerala","Madhya Pradesh","Maharashtra",
+ "Odisha","Punjab","Rajasthan","Tamil Nadu","Telangana",
+ "Uttar Pradesh","Uttarakhand","West Bengal","Goa",
+ "Jammu and Kashmir","Delhi","Sikkim"
+];
+
+const DISTRICTS={
+
+ "Andhra Pradesh":[
+  "Anantapur","Chittoor","Guntur","Krishna",
+  "Kurnool","Nellore","Prakasam","Visakhapatnam"
+ ],
+
+ "Assam":[
+  "Cachar","Darrang","Dibrugarh","Jorhat",
+  "Kamrup","Lakhimpur","Nagaon","Sonitpur"
+ ],
+
+ "Bihar":[
+  "Araria","Aurangabad","Bhagalpur","Darbhanga",
+  "Gaya","Muzaffarpur","Patna","Purnia"
+ ],
+
+ "Chhattisgarh":[
+  "Balod","Bilaspur","Durg","Korba",
+  "Raipur","Rajnandgaon","Surguja"
+ ],
+
+ "Gujarat":[
+  "Ahmedabad","Banaskantha","Bhavnagar","Jamnagar",
+  "Junagadh","Kheda","Rajkot","Surat"
+ ],
+
+ "Haryana":[
+  "Ambala","Fatehabad","Gurugram","Hisar",
+  "Karnal","Kurukshetra","Rohtak","Sirsa"
+ ],
+
+ "Himachal Pradesh":[
+  "Bilaspur","Chamba","Kangra","Kullu",
+  "Mandi","Shimla","Sirmaur","Solan"
+ ],
+
+ "Jharkhand":[
+  "Bokaro","Dhanbad","Dumka","Hazaribagh",
+  "Ranchi","East Singhbhum"
+ ],
+
+ "Karnataka":[
+  "Bengaluru","Belagavi","Dharwad","Hassan",
+  "Mysuru","Shivamogga","Tumakuru","Vijayapura"
+ ],
+
+ "Kerala":[
+  "Alappuzha","Ernakulam","Idukki","Kannur",
+  "Kollam","Kottayam","Kozhikode","Thrissur"
+ ],
+
+ "Madhya Pradesh":[
+  "Bhopal","Dewas","Gwalior","Indore",
+  "Jabalpur","Mandsaur","Ratlam","Ujjain"
+ ],
+
+ "Maharashtra":[
+  "Ahmednagar","Akola","Amravati","Aurangabad",
+  "Kolhapur","Latur","Nagpur","Nashik",
+  "Pune","Sangli","Satara","Solapur"
+ ],
+
+ "Odisha":[
+  "Balasore","Cuttack","Ganjam","Kalahandi",
+  "Khordha","Koraput","Mayurbhanj","Sambalpur"
+ ],
+
+ "Punjab":[
+  "Amritsar","Bathinda","Fazilka","Ferozepur",
+  "Jalandhar","Ludhiana","Moga","Patiala"
+ ],
+
+ "Rajasthan":[
+  "Ajmer","Alwar","Bharatpur","Bikaner",
+  "Jaipur","Jodhpur","Kota","Sikar",
+  "Sri Ganganagar","Udaipur"
+ ],
+
+ "Tamil Nadu":[
+  "Chengalpattu","Coimbatore","Dindigul","Erode",
+  "Madurai","Salem","Thanjavur","Tiruchirappalli"
+ ],
+
+ "Telangana":[
+  "Adilabad","Hyderabad","Karimnagar","Khammam",
+  "Mahbubnagar","Nalgonda","Nizamabad","Warangal"
+ ],
+
+ "Uttar Pradesh":[
+  "Agra","Bareilly","Ghaziabad","Gorakhpur",
+  "Kanpur","Lucknow","Meerut","Prayagraj","Varanasi"
+ ],
+
+ "Uttarakhand":[
+  "Almora","Dehradun","Haridwar","Nainital",
+  "Pauri Garhwal","Udham Singh Nagar"
+ ],
+
+ "West Bengal":[
+  "Bardhaman","Bankura","Darjeeling","Hooghly",
+  "Howrah","Malda","Murshidabad","Nadia",
+  "North 24 Parganas"
+ ],
+
+ "Goa":["North Goa","South Goa"],
+
+ "Jammu and Kashmir":[
+  "Anantnag","Baramulla","Jammu","Kathua",
+  "Pulwama","Srinagar"
+ ],
+
+ "Delhi":[
+  "Central Delhi","East Delhi","North Delhi",
+  "South Delhi","West Delhi"
+ ],
+
+ "Sikkim":[
+  "East Sikkim","North Sikkim",
+  "South Sikkim","West Sikkim"
+ ]
+
+};
+
+const STATE_COORDS={
+
+ "Andhra Pradesh":[15.9129,79.7400],
+ "Assam":[26.2006,92.9376],
+ "Bihar":[25.0961,85.3131],
+ "Chhattisgarh":[21.2787,81.8661],
+ "Gujarat":[22.2587,71.1924],
+ "Haryana":[29.0588,76.0856],
+ "Himachal Pradesh":[31.1048,77.1734],
+ "Jharkhand":[23.6102,85.2799],
+ "Karnataka":[15.3173,75.7139],
+ "Kerala":[10.8505,76.2711],
+ "Madhya Pradesh":[22.9734,78.6569],
+ "Maharashtra":[19.7515,75.7139],
+ "Odisha":[20.9517,85.0985],
+ "Punjab":[31.1471,75.3412],
+ "Rajasthan":[27.0238,74.2179],
+ "Tamil Nadu":[11.1271,78.6569],
+ "Telangana":[18.1124,79.0193],
+ "Uttar Pradesh":[26.8467,80.9462],
+ "Uttarakhand":[30.0668,79.0193],
+ "West Bengal":[22.9868,87.8550],
+ "Goa":[15.2993,74.1240],
+ "Jammu and Kashmir":[33.7782,76.5762],
+ "Delhi":[28.7041,77.1025],
+ "Sikkim":[27.5330,88.5122]
+
+};
+
+function haversineKm(a,b){
+
+ const R=6371;
+ const rad=Math.PI/180;
+
+ const dLat=(b[0]-a[0])*rad;
+ const dLon=(b[1]-a[1])*rad;
+
+ const x=
+ Math.sin(dLat/2)**2+
+ Math.cos(a[0]*rad)*
+ Math.cos(b[0]*rad)*
+ Math.sin(dLon/2)**2;
+
+ return 2*R*Math.asin(Math.sqrt(x));
+}
+
+const DIST={};
+
+STATES.forEach(a=>{
+
+ DIST[a]={};
+
+ STATES.forEach(b=>{
+
+  if(a!==b){
+
+   DIST[a][b]=Math.round(
+    haversineKm(
+     STATE_COORDS[a],
+     STATE_COORDS[b]
+    )*1.25
+   );
+
+  }
+
+ });
+
+});
+
+const BASE={
+ Wheat:2450,
+ Rice:2850,
+ Onion:1900,
+ Tomato:2100,
+ Potato:1450,
+ Cotton:7200,
+ Soybean:4700,
+ Maize:2250
+};
+
+const $=id=>document.getElementById(id);
+
+const money=n=>
+ "₹"+Math.round(n||0).toLocaleString("en-IN");
+
+const today=
+ new Date().toISOString().slice(0,10);
+
+function fill(id,arr){
+ $(id).innerHTML=
+ arr.map(x=>`<option>${x}</option>`).join("");
+}
+
+["crop","compareCrop","profitCrop"]
+.forEach(id=>fill(id,CROPS));
+
+["state","homeState","destState"]
+.forEach(id=>fill(id,STATES));
+
+function fillDistricts(){
+
+ const s=$("state").value;
+
+ const list=DISTRICTS[s]||[];
+
+ $("district").innerHTML=
+ list.map(x=>`<option>${x}</option>`).join("");
+
+}
+
+$("state").addEventListener(
+ "change",
+ fillDistricts
+);
+
+fillDistricts();
+
+$("state").value="Maharashtra";
+$("homeState").value="Maharashtra";
+$("destState").value="Gujarat";
+
+document.addEventListener(
+ "click",
+ function(e){
+
+  const b=
+   e.target.closest &&
+   e.target.closest(".tab");
+
+  if(!b)return;
+
+  e.preventDefault();
+
+  const id=
+   b.getAttribute("data-panel");
+
+  if(id)goTo(id);
+
+ },
+ true
+);
+
+function goTo(id){
+
+ document.querySelectorAll(".tab")
+ .forEach(x=>
+  x.classList.toggle(
+   "active",
+   x.getAttribute("data-panel")===id
+  )
+ );
+
+ document.querySelectorAll(".panel")
+ .forEach(x=>
+  x.classList.toggle(
+   "active",
+   x.id===id
+  )
+ );
+
+ const tabs=
+  document.querySelector(".tabs");
+
+ if(tabs)
+  window.scrollTo({
+   top:Math.max(0,tabs.offsetTop-8),
+   behavior:"smooth"
+  });
+
+}
+
+function toast(t){
+
+ $("toast").textContent=t;
+
+ $("toast").classList.add("show");
+
+ setTimeout(
+  ()=>$("toast").classList.remove("show"),
+  2400
+ );
+
+}
+
+function key(){
+
+ return localStorage.getItem(
+  "mandipulse_api_key"
+ )||"";
+
+}
+
+function openKey(){
+
+ $("keyModal").classList.add("open");
+
+ $("apiKeyInput").value=key();
+
+ $("apiTestResult").textContent=
+  key()
+  ?"Saved key found. Test it now."
+  :"No API key attached.";
+
+}
+
+function closeKey(){
+
+ $("keyModal").classList.remove("open");
+
+}
+
+function clearKey(){
+
+ localStorage.removeItem(
+  "mandipulse_api_key"
+ );
+
+ $("connectionText").textContent=
+  "ESTIMATED DATA";
+
+ $("apiTestResult").textContent=
+  "API key removed. Estimated mode is active.";
+
+ toast("API key removed");
+
+}
+
+async function saveKeyAndTest(){
+
+ const k=
+  $("apiKeyInput").value.trim();
+
+ if(!k)
+  return toast("Paste an API key first");
+
+ localStorage.setItem(
+  "mandipulse_api_key",
+  k
+ );
+
+ $("connectionText").textContent=
+  "TESTING API…";
+
+ await testAPI();
+
+}
+
+function saveKey(){
+ return saveKeyAndTest();
+}
+
+function apiURL(params={}){
+
+ const u=new URL(API_BASE);
+
+ u.searchParams.set(
+  "api-key",
+  key()
+ );
+
+ u.searchParams.set(
+  "format",
+  "json"
+ );
+
+ u.searchParams.set(
+  "limit",
+  params.limit||100
+ );
+
+ if(params.offset)
+  u.searchParams.set(
+   "offset",
+   params.offset
+  );
+
+ Object.entries(
+  params.filters||{}
+ )
+ .forEach(([k,v])=>{
+
+  if(
+   v!==undefined &&
+   v!==null &&
+   String(v).trim()!==""
+  )
+   u.searchParams.set(
+    `filters[${k}]`,
+    v
+   );
+
+ });
+
+ return u;
+
+}
+
+function normaliseRecord(r){
+
+ return{
+
+  state:String(
+   r.state||""
+  ).trim(),
+
+  district:String(
+   r.district||""
+  ).trim(),
+
+  market:String(
+   r.market||""
+  ).trim(),
+
+  commodity:String(
+   r.commodity||""
+  ).trim(),
+
+  variety:String(
+   r.variety||""
+  ).trim(),
+
+  date:String(
+   r.arrival_date||""
+  ).trim(),
+
+  min:Number(
+   String(
+    r.min_price??""
+   ).replace(/,/g,"")
+  )||0,
+
+  max:Number(
+   String(
+    r.max_price??""
+   ).replace(/,/g,"")
+  )||0,
+
+  modal:Number(
+   String(
+    r.modal_price??""
+   ).replace(/,/g,"")
+  )||0
+
+ };
+
+}
+
+function parseRec(r){
+ return normaliseRecord(r);
+}
+
+async function apiFetch(
+ filters={},
+ limit=100,
+ offset=0
+){
+
+ if(!key())
+  throw new Error("NO_KEY");
+
+ const r=
+  await fetch(
+   apiURL({
+    filters,
+    limit,
+    offset
+   }),
+   {cache:"no-store"}
+  );
+
+ const text=
+  await r.text();
+
+ if(!r.ok)
+  throw new Error(
+   "API_"+r.status
+  );
+
+ let j;
+
+ try{
+  j=JSON.parse(text);
+ }
+ catch(e){
+  throw new Error("INVALID_JSON");
+ }
+
+ if(!Array.isArray(j.records))
+  throw new Error("NO_RECORDS");
+
+ return j.records
+  .map(normaliseRecord)
+  .filter(r=>r.commodity);
+
+}
+
+async function testAPI(){
+
+ const out=$("apiTestResult");
+
+ if(!key()){
+
+  out.textContent=
+   "No API key attached.";
+
+  return false;
+
+ }
+
+ out.innerHTML=
+  '<span class="spinner"></span> Testing live mandi endpoint…';
+
+ try{
+
+  const rows=
+   await apiFetch({},10,0);
+
+  const good=
+   rows.filter(
+    r=>
+     r.state&&
+     r.district&&
+     r.market&&
+     r.commodity&&
+     r.date&&
+     r.modal>0
+   );
+
+  if(!rows.length||!good.length)
+   throw new Error(
+    "API returned no valid mandi-price records"
+   );
+
+  $("connectionText").textContent=
+   "LIVE GOVT DATA";
+
+  out.innerHTML=
+   `<span class="up">✓ API working</span> · ${rows.length} records checked · required fields OK`;
+
+  toast(
+   "API connected — live mandi data ready"
+  );
+
+  return true;
+
+ }
+ catch(err){
+
+  console.error(err);
+
+  $("connectionText").textContent=
+   "ESTIMATED DATA";
+
+  out.innerHTML=
+   `<span style="color:#ffca62">⚠ Live fetch failed:</span> ${err.message||err}`;
+
+  toast(
+   "Live API failed — estimated enabled"
+  );
+
+  return false;
+
+ }
+
+}
+
+function setStatus(
+ id,
+ msg,
+ loading=false
+){
+
+ $(id).innerHTML=
+  loading
+  ?`<div class="status"><span class="spinner"></span>${msg}</div>`
+  :`<div class="status">${msg}</div>`;
+
+}
+
+async function liveCropRecords(crop){
+
+ return(
+  await apiFetch(
+   {commodity:crop},
+   10000,
+   0
+  )
+ ).filter(r=>r.modal>0);
+
+}
+
+async function getLiveRecords(
+ crop,
+ state="",
+ district="",
+ market=""
+){
+
+ const f={
+  commodity:crop
+ };
+
+ if(state)f.state=state;
+ if(district)f.district=district;
+ if(market)f.market=market;
+
+ return(
+  await apiFetch(
+   f,
+   10000,
+   0
+  )
+ ).filter(r=>r.modal>0);
+
+}
+
+function sampleRecords(
+ crop,
+ state,
+ district=""
+){
+
+ const base=
+  BASE[crop]||2000;
+
+ const list=
+  DISTRICTS[state]||["Central"];
+
+ return list
+  .slice(0,8)
+  .map((d,i)=>{
+
+   const modal=
+    Math.round(
+     base*
+     (
+      .84+
+      i*.028+
+      (STATES.indexOf(state)%5)*.012
+     )
+    );
+
+   return{
+    state,
+    district:d,
+    market:d+" APMC",
+    commodity:crop,
+    date:today,
+    min:modal-120,
+    max:modal+160,
+    modal
+   };
+
+  })
+  .filter(
+   x=>
+    !district||
+    x.district.toLowerCase()===
+    district.toLowerCase()
+  );
+
+}
+
+function getRecords(
+ crop,
+ state,
+ market="",
+ district=""
+){
+
+ const base=
+  BASE[crop]||2000;
+
+ const factors={
+
+  "Andhra Pradesh":1.01,
+  "Assam":.96,
+  "Bihar":.98,
+  "Chhattisgarh":.94,
+  "Gujarat":1.04,
+  "Haryana":1.07,
+  "Himachal Pradesh":1.08,
+  "Jharkhand":.95,
+  "Karnataka":1.03,
+  "Kerala":1.12,
+  "Madhya Pradesh":1.00,
+  "Maharashtra":1.06,
+  "Odisha":.97,
+  "Punjab":1.09,
+  "Rajasthan":1.02,
+  "Tamil Nadu":1.05,
+  "Telangana":1.01,
+  "Uttar Pradesh":1.00,
+  "Uttarakhand":1.07,
+  "West Bengal":1.03,
+  "Goa":1.10,
+  "Jammu and Kashmir":1.11,
+  "Delhi":1.14,
+  "Sikkim":1.13
+
+ };
+
+ const f=
+  factors[state]||1;
+
+ const ds=
+  DISTRICTS[state]||["Central"];
+
+ return ds
+  .slice(0,8)
+  .map((d,i)=>{
+
+   const modal=
+    Math.round(
+     base*f*
+     (1+(i%5-2)*.012)
+    );
+
+   return{
+    state,
+    district:d,
+    market:d+" APMC",
+    commodity:crop,
+    date:today,
+    min:Math.round(modal*.92),
+    max:Math.round(modal*1.08),
+    modal
+   };
+
+  })
+  .filter(
+   x=>
+    (!district||
+     x.district.toLowerCase()===
+     district.toLowerCase())&&
+    (!market||
+     x.market.toLowerCase()
+      .includes(market.toLowerCase()))
+  );
+
+}
+
+const MP={records:null,live:false,profit:null};
+
+function updateKPI(
+ records,
+ live=false
+){
+
+ if(!records.length)return;
+
+ MP.records=records;
+ MP.live=live;
+
+ const best=
+  [...records]
+  .sort(
+   (a,b)=>b.modal-a.modal
+  )[0];
+
+ $("kpiPrice").textContent=
+  money(best.modal);
+
+ $("kpiMarket").textContent=
+  best.market||"—";
+
+ $("kpiMarkets").textContent=
+  records.length.toLocaleString(
+   "en-IN"
+  );
+
+ $("kpiDate").textContent=
+  best.date||"—";
+
+ $("kpiTrend").textContent=
+  live
+  ?"LIVE GOVERNMENT DATA"
+  :(key()
+   ?"ESTIMATED / ESTIMATE"
+   :"ESTIMATED / SAMPLE");
+
+ $("connectionText").textContent=
+  live
+  ?"LIVE GOVT DATA"
+  :"ESTIMATED DATA";
+
+}
+
+async function searchPrice(){
+
+ const crop=
+  $("crop").value;
+
+ const state=
+  $("state").value;
+
+ const district=
+  $("district").value;
+
+ const market=
+  $("market").value.trim();
+
+ setStatus(
+  "lookupStatus",
+  key()
+   ?"Fetching official mandi records…"
+   :"No API key — showing estimated estimate.",
+  true
+ );
+
+ let records=[];
+ let live=false;
+
+ if(key()){
+
+  try{
+
+   records=
+    await getLiveRecords(
+     crop,
+     state,
+     district,
+     market
+    );
+
+   live=
+    records.length>0;
+
+   if(
+    !records.length &&
+    (district||market)
+   )
+    records=
+     await getLiveRecords(
+      crop,
+      state
+     );
+
+  }
+  catch(e){
+   console.warn(e);
+  }
+
+ }
+
+ if(!records.length)
+  records=
+   getRecords(
+    crop,
+    state,
+    market,
+    district
+   );
+
+ updateKPI(
+  records,
+  live
+ );
+
+ if(!records.length){
+
+  $("priceResult").innerHTML=
+   '<div class="insight"><b>No matching record found.</b> Try another crop/district/market.</div>';
+
+  setStatus(
+   "lookupStatus",
+   "No matching record"
+  );
+
+  return;
+
+ }
+
+ const best=
+  [...records]
+  .sort(
+   (a,b)=>b.modal-a.modal
+  )[0];
+
+ $("priceResult").innerHTML=
+ `<div class="pricehero">
+
+  <div class="top">
+
+   <div>
+
+    <h4>
+     ${best.commodity} · ${best.market}
+    </h4>
+
+    <div class="sub">
+     ${best.district},
+     ${best.state}
+     · arrival date
+     ${best.date||"—"}
+    </div>
+
+   </div>
+
+   <span class="source">
+    ${live
+     ?"LIVE GOVT DATA"
+     :"ESTIMATE / ESTIMATED"}
+   </span>
+
+  </div>
+
+  <div class="bigprice">
+   ${money(best.modal)}
+   <span style="font-size:14px;opacity:0.8">
+    / quintal
+   </span>
+  </div>
+
+  <div class="sub">
+   ${live
+    ?"Official returned modal price from the Government mandi dataset."
+    :"Live API was unavailable, so this is an offline estimate and is explicitly labelled."}
+  </div>
+
+  <div class="range">
+
+   <div class="mini low">
+    <small>MIN</small>
+    <strong>${money(best.min)}</strong>
+   </div>
+
+   <div class="mini">
+    <small>MODAL</small>
+    <strong>${money(best.modal)}</strong>
+   </div>
+
+   <div class="mini high">
+    <small>MAX</small>
+    <strong>${money(best.max)}</strong>
+   </div>
+
+  </div>
+
+ </div>`;
+
+ setStatus(
+  "lookupStatus",
+  `${records.length} ${live?"official":"estimated"} market record${records.length>1?"s":""} scanned`
+ );
+
+}
+
+function fillPopular(){
+
+ $("crop").value="Onion";
+
+ $("state").value=
+  "Maharashtra";
+
+ fillDistricts();
+
+ $("district").value="Pune";
+
+ $("market").value="";
+
+ searchPrice();
+
+}
+
+function compareMarkets(){
+
+ const crop=
+  $("compareCrop").value;
+
+ setStatus(
+  "compareResult",
+  key()
+   ?"Fetching official records across all states…"
+   :"No API key — showing estimated estimated.",
+  true
+ );
+
+ return (async()=>{
+
+  let raw=[];
+  let live=false;
+
+  if(key()){
+
+   try{
+
+    raw=
+     await liveCropRecords(
+      crop
+     );
+
+    live=
+     raw.length>0;
+
+   }
+   catch(e){
+    console.warn(e);
+   }
+
+  }
+
+  let records=[];
+
+  if(live){
+
+   const byState={};
+
+   raw.forEach(r=>{
+
+    if(!r.state||!r.modal)
+     return;
+
+    if(
+     !byState[r.state]||
+     r.modal>byState[r.state].modal
+    )
+     byState[r.state]=r;
+
+   });
+
+   records=
+    Object.values(byState)
+    .sort(
+     (a,b)=>b.modal-a.modal
+    );
+
+  }
+  else{
+
+   records=
+    STATES
+    .map(
+     state=>
+      [...sampleRecords(crop,state)]
+      .sort(
+       (a,b)=>b.modal-a.modal
+      )[0]
+    )
+    .filter(Boolean)
+    .sort(
+     (a,b)=>b.modal-a.modal
+    );
+
+  }
+
+  updateKPI(
+   records,
+   live
+  );
+
+  $("compareResult").innerHTML=
+   `<div class="table-wrap">
+
+    <table>
+
+     <thead>
+
+      <tr>
+       <th>#</th>
+       <th>State</th>
+       <th>District</th>
+       <th>Market</th>
+       <th>${live?"Min":"Est. Min"} ₹/QTL</th>
+       <th>${live?"Modal":"Est. Modal"} ₹/QTL</th>
+       <th>${live?"Max":"Est. Max"} ₹/QTL</th>
+       <th>Source</th>
+      </tr>
+
+     </thead>
+
+     <tbody>
+
+      ${records.map((r,i)=>
+
+       `<tr class="${i===0?"best":""}">
+
+        <td class="rank">
+         ${i+1}
+        </td>
+
+        <td>
+         <b>${r.state}</b>
+        </td>
+
+        <td>
+         ${r.district||"—"}
+        </td>
+
+        <td>
+         ${r.market||"—"}
+        </td>
+
+        <td class="num">
+         ${money(r.min)}
+        </td>
+
+        <td class="num">
+         <b>${money(r.modal)}</b>
+        </td>
+
+        <td class="num">
+         ${money(r.max)}
+        </td>
+
+        <td>
+         ${
+          live
+          ?'<span class="badge2">LIVE GOVT</span>'
+          :'<span class="badge2">ESTIMATED</span>'
+         }
+        </td>
+
+       </tr>`
+
+      ).join("")}
+
+     </tbody>
+
+    </table>
+
+   </div>
+
+   <div class="insight">
+
+    <b>${crop} — ${records.length} states:</b>
+
+    ${
+     live
+     ?"real mandi records grouped by state; each row uses the highest returned modal-price market in that state."
+     :"estimated data because no usable live API response was available."
+    }
+
+   </div>`;
+
+  setStatus(
+   "compareStatus",
+   live
+   ?`${raw.length.toLocaleString("en-IN")} official records fetched and grouped across ${records.length} states.`
+   :`${records.length} state estimates generated in estimated data.`
+  );
+
+ })();
+
+}
+
+function calculateProfit(){
+
+ try{
+
+  const home=
+   $("homeState").value;
+
+  const dest=
+   $("destState").value;
+
+  const crop=
+   $("profitCrop").value;
+
+  const qty=
+   Math.max(
+    1,
+    +$("qty").value||1
+   );
+
+  const rate=
+   Math.max(
+    .1,
+    +$("rate").value||1.8
+   );
+
+  const km=
+   home===dest
+   ?0
+   :(DIST[home]?.[dest]||0);
+
+  const truckCapacity=20;
+
+  const trucks=
+   Math.ceil(
+    qty/truckCapacity
+   );
+
+  const selling=
+   sampleRecords(
+    crop,
+    dest
+   )[0];
+
+  const price=
+   selling.modal;
+
+  const totalIncome=
+   price*qty;
+
+  const totalTransport=
+   Math.round(
+    rate*km*trucks
+   );
+
+  const profit=
+   totalIncome-totalTransport;
+
+  MP.profit={crop,home_state:home,selling_state:dest,quantity_quintals:qty,selling_price_per_quintal:price,distance_km:km,trucks,total_income:totalIncome,transport_cost:totalTransport,profit_after_transport:profit,data_type:"estimated"};
+
+  $("profitResult").innerHTML=
+   `<div class="pricehero">
+
+    <div class="top">
+
+     <div>
+
+      <h4>
+       ${crop} · ${dest}
+      </h4>
+
+      <div class="sub">
+       Home: ${home}
+       · Selling: ${dest}
+       · estimated selling price
+      </div>
+
+     </div>
+
+     <span class="source">
+      ESTIMATE
+     </span>
+
+    </div>
+
+    <div class="bigprice">
+     ${money(profit)}
+     <span style="font-size:14px;opacity:0.8">
+      after transport
+     </span>
+    </div>
+
+    <div class="range">
+
+     <div class="mini">
+      <small>SELLING PRICE / QTL</small>
+      <strong>${money(price)}</strong>
+     </div>
+
+     <div class="mini">
+      <small>QUANTITY</small>
+      <strong>${qty} QTL</strong>
+     </div>
+
+     <div class="mini">
+      <small>EST. DISTANCE</small>
+      <strong>${km.toLocaleString("en-IN")} KM</strong>
+     </div>
+
+     <div class="mini high">
+      <small>TRANSPORT</small>
+      <strong>${money(totalTransport)}</strong>
+     </div>
+
+    </div>
+
+    <div class="insight">
+
+     <b>Estimated route distance:</b>
+     ${km.toLocaleString("en-IN")} km
+     (${home} → ${dest})
+
+     <br>
+
+     <b>Calculation:</b>
+
+     <br>
+
+     ${money(price)} × ${qty} QTL =
+     <b>${money(totalIncome)}</b>
+     estimated selling value.
+
+     <br>
+
+     Estimated inter-state distance:
+     <b>${km.toLocaleString("en-IN")} km</b>
+     (state-centroid/road-factor estimate).
+
+     <br>
+
+     ${qty} QTL ÷ 20 QTL/truck →
+     <b>${trucks} truck${trucks>1?"s":""}</b>.
+
+     <br>
+
+     ${money(rate)} ×
+     ${km.toLocaleString("en-IN")} km ×
+     ${trucks} truck${trucks>1?"s":""}
+     =
+     <b>${money(totalTransport)}</b>
+     transport.
+
+     <br>
+
+     <b>
+      After transport =
+      ${money(totalIncome)}
+      −
+      ${money(totalTransport)}
+      =
+      ${money(profit)}
+     </b>
+
+    </div>
+
+   </div>`;
+
+ }
+ catch(err){
+
+  console.error(err);
+
+  $("profitResult").innerHTML=
+   '<div class="insight"><b>Could not calculate transportation.</b> Check the inputs and try again.</div>';
+
+ }
+
+}
+
+function loadEstimated(){
+
+ $("crop").value="Onion";
+
+ $("state").value=
+  "Maharashtra";
+
+ $("market").value="";
+
+ goTo("lookup");
+
+ const records=
+  sampleRecords(
+   "Onion",
+   "Maharashtra",
+   "Pune"
+  );
+
+ updateKPI(records);
+
+ const best=
+  [...records]
+  .sort(
+   (a,b)=>b.modal-a.modal
+  )[0];
+
+ $("lookupStatus").innerHTML=
+  '<div class="status">Estimated market engine ready · no API required</div>';
+
+ $("priceResult").innerHTML=
+  `<div class="pricehero">
+
+   <div class="top">
+
+    <div>
+
+     <h4>
+      ${best.commodity} · ${best.market}
+     </h4>
+
+     <div class="sub">
+      ${best.district},
+      ${best.state}
+      · arrival date
+      ${best.date}
+     </div>
+
+    </div>
+
+    <span class="source">
+     EST. GOVT. DATA
+    </span>
+
+   </div>
+
+   <div class="bigprice">
+    ${money(best.modal)}
+    <span style="font-size:14px;opacity:0.8">
+     / quintal
+    </span>
+   </div>
+
+   <div class="sub">
+    Modal price · estimated from recent Government mandi price patterns;
+    offline estimate, not a live quote.
+   </div>
+
+   <div class="range">
+
+    <div class="mini low">
+     <small>MIN</small>
+     <strong>${money(best.min)}</strong>
+    </div>
+
+    <div class="mini">
+     <small>MODAL</small>
+     <strong>${money(best.modal)}</strong>
+    </div>
+
+    <div class="mini high">
+     <small>MAX</small>
+     <strong>${money(best.max)}</strong>
+    </div>
+
+   </div>
+
+  </div>`;
+
+ toast(
+  "Estimated loaded — app is ready"
+ );
+
+}
+
+if(key()){
+
+ $("connectionText").textContent=
+  "CHECKING API…";
+
+ setTimeout(
+  ()=>testAPI(),
+  250
+ );
+
+}
+
+loadEstimated();
+
+</script>
+
+<!-- Text chat with the same ElevenLabs agent -->
+<button class="chat-fab" id="chatFab" type="button">💬 Chat with AI</button>
+
+<div class="chat-panel" id="chatPanel" role="dialog" aria-label="Chat with MandiPulse AI">
+  <div class="chat-head">
+    <div><b>MandiPulse AI</b><small id="chatStatus">Type your question</small></div>
+    <div>
+      <button class="chat-x" id="chatNew" type="button" title="New chat" style="font-size:14px">↻</button>
+      <button class="chat-x" id="chatClose" type="button" title="Close">✕</button>
+    </div>
+  </div>
+  <div class="chat-log" id="chatLog"></div>
+  <div class="chat-chips" id="chatChips">
+    <button type="button">Onion price in Pune?</button>
+    <button type="button">Which state pays most for wheat?</button>
+    <button type="button">Profit: 20 qtl potato Punjab → Delhi</button>
+  </div>
+  <div class="chat-form">
+    <input id="chatInput" type="text" placeholder="Ask about mandi prices…" autocomplete="off">
+    <button id="chatSend" type="button">Send</button>
+  </div>
+</div>
+
+<script type="module">
+import { Conversation } from "https://cdn.jsdelivr.net/npm/@elevenlabs/client@1.25.0/+esm";
+
+const AGENT_ID="agent_3001m2rbparrf6xtp1gc7kph7cg3";
+const $c=id=>document.getElementById(id);
+const panel=$c("chatPanel"),fab=$c("chatFab"),log=$c("chatLog"),input=$c("chatInput"),send=$c("chatSend"),status=$c("chatStatus");
+
+let convo=null,starting=null,typingEl=null;
+
+function add(role,text){
+  const d=document.createElement("div");
+  d.className="msg "+role;
+  d.textContent=text;
+  log.appendChild(d);
+  log.scrollTop=log.scrollHeight;
+  return d;
+}
+function setTyping(on){
+  if(on&&!typingEl){typingEl=add("sys","AI is typing…");}
+  if(!on&&typingEl){typingEl.remove();typingEl=null;}
+}
+function open(){
+  panel.classList.add("open");fab.style.display="none";
+  if(!log.children.length)add("agent","Hi! Ask me about mandi prices, the best state to sell in, or transport profit.");
+  input.focus();
+}
+function close(){panel.classList.remove("open");fab.style.display="";}
+
+async function ensureSession(){
+  if(convo)return convo;
+  if(starting)return starting;
+  status.textContent="Connecting…";
+  if(window.MP_agent)window.MP_agent.sync();
+  starting=Conversation.startSession({
+    agentId:AGENT_ID,
+    connectionType:"websocket",
+    textOnly:true,
+    dynamicVariables:window.MP_vars||{},
+    clientTools:(window.MP_agent&&window.MP_agent.tools)||{},
+    onConnect:()=>{status.textContent="Connected";},
+    onDisconnect:()=>{convo=null;status.textContent="Disconnected — send a message to reconnect";setTyping(false);},
+    onError:e=>{console.error(e);setTyping(false);add("sys","Connection problem. Check the agent settings (see notes).");},
+    onMessage:m=>{
+      if(m.role==="agent"){setTyping(false);add("agent",m.message);}
+    }
+  }).then(c=>{convo=c;starting=null;return c;})
+    .catch(e=>{starting=null;status.textContent="Could not connect";console.error(e);throw e;});
+  return starting;
+}
+
+async function sendMsg(text){
+  text=(text||input.value).trim();
+  if(!text)return;
+  input.value="";
+  $c("chatChips").style.display="none";
+  add("user",text);
+  send.disabled=true;
+  try{
+    const c=await ensureSession();
+    if(window.MP_agent)window.MP_agent.sync();
+    setTyping(true);
+    c.sendUserMessage(text);
+  }catch(e){
+    setTyping(false);
+    add("sys","Could not reach the agent. Make sure text-only overrides are enabled on the agent and this domain is allowlisted.");
+  }finally{send.disabled=false;input.focus();}
+}
+
+async function newChat(){
+  try{if(convo)await convo.endSession();}catch(e){}
+  convo=null;log.innerHTML="";$c("chatChips").style.display="";
+  status.textContent="Type your question";
+  add("agent","New chat started. What would you like to know?");
+}
+
+fab.addEventListener("click",open);
+$c("chatClose").addEventListener("click",close);
+$c("chatNew").addEventListener("click",newChat);
+send.addEventListener("click",()=>sendMsg());
+input.addEventListener("keydown",e=>{if(e.key==="Enter")sendMsg();});
+$c("chatChips").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>sendMsg(b.textContent)));
+</script>
+
+<!-- ElevenLabs voice agent -->
+<elevenlabs-convai agent-id="agent_3001m2rbparrf6xtp1gc7kph7cg3"></elevenlabs-convai>
+<script
+  src="https://unpkg.com/@elevenlabs/convai-widget-embed"
+  async
+  type="text/javascript">
+</script>
+
+<script>
+/* ===== MandiPulse <-> ElevenLabs agent bridge ===== */
+(function(){
+
+  const widget=document.querySelector("elevenlabs-convai");
+  if(!widget)return;
+
+  const pick=(list,v)=>
+    list.find(x=>x.toLowerCase()===String(v||"").trim().toLowerCase())||null;
+
+  const activeTab=()=>{
+    const t=document.querySelector(".tab.active");
+    return t?t.getAttribute("data-panel"):"lookup";
+  };
+
+  const rowOut=r=>({
+    state:r.state,district:r.district,market:r.market,commodity:r.commodity,
+    arrival_date:r.date,min_price:r.min,modal_price:r.modal,max_price:r.max
+  });
+
+  const summariseRecords=()=>{
+    const recs=MP.records;
+    if(!recs||!recs.length)return null;
+    const sorted=[...recs].sort((a,b)=>b.modal-a.modal);
+    return{
+      data_type:MP.live?"live government data (data.gov.in / AGMARKNET)":"estimated offline data, NOT a live quote",
+      records_scanned:recs.length,
+      best:rowOut(sorted[0]),
+      top_5:sorted.slice(0,5).map(rowOut)
+    };
+  };
+
+  const snapshot=()=>({
+    active_tab:activeTab(),
+    connection:$("connectionText").textContent,
+    lookup_form:{
+      crop:$("crop").value,state:$("state").value,
+      district:$("district").value,market:$("market").value
+    },
+    compare_crop:$("compareCrop").value,
+    transport_form:{
+      home_state:$("homeState").value,selling_state:$("destState").value,
+      crop:$("profitCrop").value,quantity_quintals:+$("qty").value,
+      freight_rate:+$("rate").value
+    },
+    latest_prices:summariseRecords(),
+    latest_transport_calc:MP.profit
+  });
+
+  /* Dynamic variables: give the agent context when a call starts.
+     In the ElevenLabs agent prompt reference them as {{dashboard_mode}} etc. */
+  function syncAgent(){
+    try{
+      const s=summariseRecords();
+      const vars={
+        dashboard_mode:$("connectionText").textContent,
+        active_tab:activeTab(),
+        selected_crop:$("crop").value,
+        selected_state:$("state").value,
+        selected_district:$("district").value||"none",
+        best_market:s?s.best.market:"none yet",
+        best_modal_price:s?String(s.best.modal_price):"none yet",
+        price_data_type:s?(MP.live?"live":"estimated"):"none yet"
+      };
+      window.MP_vars=vars;
+      widget.setAttribute("dynamic-variables",JSON.stringify(vars));
+    }catch(e){console.warn("agent sync failed",e);}
+  }
+
+  /* Client tools: things the agent can DO on the dashboard.
+     Each name must also be created as a Client tool in the ElevenLabs agent dashboard. */
+  const tools={
+
+      get_dashboard_state:async()=>JSON.stringify(snapshot()),
+
+      open_tab:async({tab})=>{
+        const map={lookup:"lookup",price:"lookup",compare:"compare","all states":"compare",
+                   profit:"profit",transportation:"profit",transport:"profit"};
+        const id=map[String(tab||"").toLowerCase()];
+        if(!id)return"Unknown tab. Use lookup, compare, or profit.";
+        goTo(id);
+        return"Opened "+id+" tab.";
+      },
+
+      search_mandi_price:async({crop,state,district,market})=>{
+        const c=pick(CROPS,crop);
+        const st=pick(STATES,state);
+        if(!c)return"Unsupported crop. Supported: "+CROPS.join(", ");
+        if(!st)return"Unsupported state. Supported: "+STATES.join(", ");
+        $("crop").value=c;
+        $("state").value=st;
+        fillDistricts();
+        const d=pick(DISTRICTS[st]||[],district);
+        if(d)$("district").value=d;
+        $("market").value=market||"";
+        goTo("lookup");
+        MP.records=null;
+        await searchPrice();
+        return JSON.stringify(summariseRecords()||{result:"No matching records found."});
+      },
+
+      compare_markets:async({crop})=>{
+        const c=pick(CROPS,crop);
+        if(!c)return"Unsupported crop. Supported: "+CROPS.join(", ");
+        $("compareCrop").value=c;
+        goTo("compare");
+        MP.records=null;
+        await compareMarkets();
+        return JSON.stringify(summariseRecords()||{result:"No records found."});
+      },
+
+      calculate_profit:async({home_state,selling_state,crop,quantity_quintals,freight_rate})=>{
+        const h=pick(STATES,home_state),d=pick(STATES,selling_state),c=pick(CROPS,crop);
+        if(!h||!d||!c)return"Check home_state, selling_state and crop; they must be from the dashboard lists.";
+        $("homeState").value=h;
+        $("destState").value=d;
+        $("profitCrop").value=c;
+        if(quantity_quintals)$("qty").value=quantity_quintals;
+        if(freight_rate)$("rate").value=freight_rate;
+        goTo("profit");
+        MP.profit=null;
+        calculateProfit();
+        return JSON.stringify(MP.profit||{result:"Calculation failed."});
+      }
+  };
+
+  widget.addEventListener("elevenlabs-convai:call",event=>{
+    syncAgent();
+    event.detail.config.clientTools=tools;
+  });
+
+  window.MP_agent={tools,sync:syncAgent};
+
+  /* keep context fresh */
+  document.addEventListener("change",syncAgent);
+  document.addEventListener("click",()=>setTimeout(syncAgent,600));
+  setTimeout(syncAgent,800);
+
+})();
+</script>
+
+</body>
+</html>
